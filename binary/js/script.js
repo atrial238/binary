@@ -491,7 +491,7 @@ function menuToggleActive(){
 		});
 	});
 }
-/* harmony default export */ __webpack_exports__["default"] = (menuToggleActive);
+/* harmony default export */ __webpack_exports__["default"] = (menuToggleActive); 
 
 /***/ }),
 

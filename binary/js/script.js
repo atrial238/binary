@@ -103,6 +103,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./files/parallaxHeader */ "./#src/js/files/parallaxHeader.js");
 /* harmony import */ var _files_scrolling__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./files/scrolling */ "./#src/js/files/scrolling.js");
 /* harmony import */ var _files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./files/menuToggleActive */ "./#src/js/files/menuToggleActive.js");
+/* harmony import */ var _files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./files/scrollProcess */ "./#src/js/files/scrollProcess.js");
 
 
 // import baguetteBox from './libs/baguetteBox.js';
@@ -127,6 +128,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	Object(_files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__["default"])();
 	Object(_files_scrolling__WEBPACK_IMPORTED_MODULE_6__["smoothScrolling"])('.scroll');
 	Object(_files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__["default"])();
+	Object(_files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__["default"])();
 });
 
 /***/ }),
@@ -140,13 +142,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-
-
 function filter() {
 
 	const tabs = document.querySelectorAll('.nav__wrapper_portfolio a'),
 			contents  = document.querySelectorAll('.content__item');
-	
+	console.log(tabs[0])
 	tabs.forEach(tab => {
 
 		tab.addEventListener('click', (e) => {
@@ -245,15 +245,25 @@ function filter() {
 __webpack_require__.r(__webpack_exports__);
 function fixedMenu () {
 	const menu = document.querySelector('.nav'),
-		heightWndowUser = document.documentElement.clientHeight;
+			header = document.querySelector('.header'),
+			emptyElem = document.createElement('div'),
+			heightWindowUser = document.documentElement.clientHeight;
+	
+			emptyElem.style.height = menu.offsetHeight + 'px';
 
 	window.addEventListener('scroll', () => {
 		
-		if(window.pageYOffset > heightWndowUser ) {
+		if(window.pageYOffset > heightWindowUser ) {
 			
 			menu.classList.add('fixed');
+			menu.classList.add('fadeIn');
+			header.appendChild(emptyElem);
+			
+
 		}else{
 			menu.classList.remove('fixed');
+			menu.classList.remove('fadeIn');
+			emptyElem.remove();
 		}
 	});
 
@@ -449,18 +459,37 @@ function testWebp () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 function menuToggleActive(){
-const menu = document.querySelectorAll('.nav__list a');
+	const menu = document.querySelectorAll('.nav a'),
+			sections = document.querySelectorAll('.section'),
+			menuWrapper = document.querySelector('.nav');
+
+	function toggleMenu (target) {
 
 		menu.forEach(item => {
-			item.addEventListener('click', (e) => {
+			item.classList.remove('_active');
+		});
+		target.classList.add('_active');
+	}
+
+	menu.forEach(item => item.addEventListener('click', (e) => toggleMenu (e.target)));
+
+	function calculCoordElemen (elem) {
+		return {top: elem.getBoundingClientRect().top + window.pageYOffset - menuWrapper.offsetHeight};
+	}
+
+	window.addEventListener('scroll', () => {
+		sections.forEach(section => {
+
+			if(calculCoordElemen(section).top -100 < window.pageYOffset) {
 
 				menu.forEach(item => {
-					item.classList.remove('_active');
+					if(item.dataset.value == section.dataset.value) {
+						toggleMenu (item);
+					}
 				});
-
-				e.target.classList.add('_active');
-			});
+			}
 		});
+	});
 }
 /* harmony default export */ __webpack_exports__["default"] = (menuToggleActive);
 
@@ -487,6 +516,40 @@ function parallaxHeader() {
 	});
 }
 /* harmony default export */ __webpack_exports__["default"] = (parallaxHeader);
+
+/***/ }),
+
+/***/ "./#src/js/files/scrollProcess.js":
+/*!****************************************!*\
+  !*** ./#src/js/files/scrollProcess.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function scrollProcess (){
+
+	const heightDocument = Math.max(
+			document.body.scrollHeight, document.documentElement.scrollHeight,
+			document.body.offsetHeight, document.documentElement.offsetHeight,
+			document.body.clientHeight, document.documentElement.clientHeight) - 
+			document.documentElement.clientHeight,
+ 
+			widthDocunent = document.documentElement.clientWidth,
+			scrollBar = document.querySelector('.nav__process span');
+
+	let	widthScrollBar = '';
+
+	window.addEventListener('scroll', () => {
+			widthScrollBar = window.pageYOffset * ( widthDocunent / heightDocument);
+			scrollBar.style.width = `${widthScrollBar}px`;
+	});
+
+}
+
+
+/* harmony default export */ __webpack_exports__["default"] = (scrollProcess);
 
 /***/ }),
 

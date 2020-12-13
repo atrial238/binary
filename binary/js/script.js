@@ -81,57 +81,10 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./#src/js/app.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./#src/js/main.js");
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./#src/js/app.js":
-/*!************************!*\
-  !*** ./#src/js/app.js ***!
-  \************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _files_imageToBackground__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./files/imageToBackground */ "./#src/js/files/imageToBackground.js");
-/* harmony import */ var _files_isSupportWebp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files/isSupportWebp */ "./#src/js/files/isSupportWebp.js");
-/* harmony import */ var _files_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files/filter */ "./#src/js/files/filter.js");
-/* harmony import */ var _files_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./files/form */ "./#src/js/files/form.js");
-/* harmony import */ var _files_fixedMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./files/fixedMenu */ "./#src/js/files/fixedMenu.js");
-/* harmony import */ var _files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./files/parallaxHeader */ "./#src/js/files/parallaxHeader.js");
-/* harmony import */ var _files_scrolling__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./files/scrolling */ "./#src/js/files/scrolling.js");
-/* harmony import */ var _files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./files/menuToggleActive */ "./#src/js/files/menuToggleActive.js");
-/* harmony import */ var _files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./files/scrollProcess */ "./#src/js/files/scrollProcess.js");
-
-
-// import baguetteBox from './libs/baguetteBox.js';
-
-
-
-
-
-
-
-
-
-window.addEventListener('DOMContentLoaded', () => {
-	'use strict';
-	
-	Object(_files_imageToBackground__WEBPACK_IMPORTED_MODULE_0__["default"])();
-	Object(_files_isSupportWebp__WEBPACK_IMPORTED_MODULE_1__["default"])();
-	Object(_files_filter__WEBPACK_IMPORTED_MODULE_2__["default"])();
-	baguetteBox.run('.gallery', {});
-	Object(_files_form__WEBPACK_IMPORTED_MODULE_3__["default"])();
-	Object(_files_fixedMenu__WEBPACK_IMPORTED_MODULE_4__["default"])(); 
-	Object(_files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__["default"])();
-	Object(_files_scrolling__WEBPACK_IMPORTED_MODULE_6__["smoothScrolling"])('.scroll');
-	Object(_files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__["default"])();
-	Object(_files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__["default"])();
-});
-
-/***/ }),
 
 /***/ "./#src/js/files/filter.js":
 /*!*********************************!*\
@@ -285,6 +238,7 @@ function forms () {
 	const allforms = document.querySelectorAll('form'),
 		allInputs = document.querySelectorAll('input'),
 		statusPost = document.querySelector('.form__button-message'),
+		textarea = document.querySelectorAll('textarea'),
 		informMessageArray = {
 			loading: 'loading...',
 			success: "We'll contact you shortly",
@@ -326,6 +280,7 @@ function forms () {
 					},
 					cleanInput = () => {
 						allInputs.forEach(input => input.value = '');
+						textarea.forEach(area => area.value = '');
 				  };
 			
 			statusPost.textContent = informMessageArray.loading;
@@ -529,20 +484,30 @@ function parallaxHeader() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 function scrollProcess (){
+	const scrollBar = document.querySelector('.nav__process span');
 
-	const heightDocument = Math.max(
-			document.body.scrollHeight, document.documentElement.scrollHeight,
-			document.body.offsetHeight, document.documentElement.offsetHeight,
-			document.body.clientHeight, document.documentElement.clientHeight) - 
-			document.documentElement.clientHeight,
- 
-			widthDocunent = document.documentElement.clientWidth,
-			scrollBar = document.querySelector('.nav__process span');
+	function calcHeightDoc (){
+		return Math.max(
+					document.body.scrollHeight, document.documentElement.scrollHeight,
+					document.body.offsetHeight, document.documentElement.offsetHeight,
+					document.body.clientHeight, document.documentElement.clientHeight) -
+					document.documentElement.clientHeight;
+	}
 
-	let	widthScrollBar = '';
+	function calcWidthDoc () {
+		return document.documentElement.clientWidth;
+	}	
+
+	calcHeightDoc ();
+	calcWidthDoc ();
+	
+	window.addEventListener('resize', () => {
+		calcHeightDoc ();
+		calcWidthDoc ();
+	});
 
 	window.addEventListener('scroll', () => {
-			widthScrollBar = window.pageYOffset * ( widthDocunent / heightDocument);
+		const	widthScrollBar = window.pageYOffset * (calcWidthDoc () / calcHeightDoc ());
 			scrollBar.style.width = `${widthScrollBar}px`;
 	});
 
@@ -618,7 +583,7 @@ const smoothScrolling = (linkSelector) => {
 
     function moveScroll(fromLink, toAnchor, hash) {
         let interval = 1,
-            speed = (fromLink > toAnchor) ? -20 : 20,
+            speed = (fromLink > toAnchor) ? -30 : 30,
             prevScrollTop,
 
             move = setInterval(() => {
@@ -683,6 +648,53 @@ const smoothScrollV2 = (linkSelector) => {
         });
     });
 };
+
+
+/***/ }),
+
+/***/ "./#src/js/main.js":
+/*!*************************!*\
+  !*** ./#src/js/main.js ***!
+  \*************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _files_imageToBackground__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./files/imageToBackground */ "./#src/js/files/imageToBackground.js");
+/* harmony import */ var _files_isSupportWebp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files/isSupportWebp */ "./#src/js/files/isSupportWebp.js");
+/* harmony import */ var _files_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files/filter */ "./#src/js/files/filter.js");
+/* harmony import */ var _files_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./files/form */ "./#src/js/files/form.js");
+/* harmony import */ var _files_fixedMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./files/fixedMenu */ "./#src/js/files/fixedMenu.js");
+/* harmony import */ var _files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./files/parallaxHeader */ "./#src/js/files/parallaxHeader.js");
+/* harmony import */ var _files_scrolling__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./files/scrolling */ "./#src/js/files/scrolling.js");
+/* harmony import */ var _files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./files/menuToggleActive */ "./#src/js/files/menuToggleActive.js");
+/* harmony import */ var _files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./files/scrollProcess */ "./#src/js/files/scrollProcess.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	Object(_files_imageToBackground__WEBPACK_IMPORTED_MODULE_0__["default"])();
+	Object(_files_isSupportWebp__WEBPACK_IMPORTED_MODULE_1__["default"])();
+	Object(_files_filter__WEBPACK_IMPORTED_MODULE_2__["default"])();
+	baguetteBox.run('.gallery', {});
+	Object(_files_form__WEBPACK_IMPORTED_MODULE_3__["default"])();
+	Object(_files_fixedMenu__WEBPACK_IMPORTED_MODULE_4__["default"])(); 
+	Object(_files_parallaxHeader__WEBPACK_IMPORTED_MODULE_5__["default"])();
+	Object(_files_scrolling__WEBPACK_IMPORTED_MODULE_6__["smoothScrolling"])('.scroll');
+	Object(_files_menuToggleActive__WEBPACK_IMPORTED_MODULE_7__["default"])();
+	Object(_files_scrollProcess__WEBPACK_IMPORTED_MODULE_8__["default"])();
 
 
 /***/ })

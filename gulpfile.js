@@ -21,6 +21,7 @@ const {parallel, watch, src, dest, series, gulp} = require('gulp'),
 	fonter          = require('gulp-fonter'),
 	fs              = require('fs'),
 	newer           = require('gulp-newer'),
+	uglify          = require('gulp-uglify-es'),
 	webpack			 = require("webpack-stream"),
 	path = {
 		build: {
@@ -33,7 +34,7 @@ const {parallel, watch, src, dest, series, gulp} = require('gulp'),
 		src: {
 			html: [source_folder + '/*.html', '!' + source_folder + '/_*.html'],
 			css: source_folder + '/scss/style.scss',
-			js: source_folder + '/js/app.js',
+			js: source_folder + '/js/main.js',
 			img: source_folder + '/img/**/*.{jpg,png,svg,gif,ico,webp}',
 			fonts: source_folder + '/fonts/*.ttf'
 		},
@@ -75,7 +76,7 @@ function imagesDev() {
 		.pipe(browserSync.stream());
 }
 
-function imgP() {
+function iP() {
 	return src(path.src.img)
 		.pipe(webp({
 			quality: 70
@@ -122,11 +123,19 @@ function scriptDev() {
 }
 
 function scriptProd () {
-	return src(path.src.js)
+	src(path.src.js)
 	.pipe(webpack({
 		mode: 'production',
 		output: {
-			filename: 'script.min.js'
+			 filename: 'script.min.js'
+		}
+	}))
+	.pipe(dest(path.build.js));
+return src(path.src.js)
+	.pipe(webpack({
+		mode: 'production',
+		output: {
+			filename: 'scriptIE.min.js'
 		},
 		module: {
 			rules: [
@@ -211,10 +220,9 @@ function fontsStyle() {
 	let file_content = fs.readFileSync(source_folder + '/scss/service/fonts.scss');
 	if (file_content == '') {
 		
-		fs.writeFile(source_folder + '/scss/fonts.scss', '', cb);
+		fs.writeFile(source_folder + '/scss/service/fonts.scss', '', cb);
 		return fs.readdir(path.build.fonts, function (err, items) {
 			if (items) {
-				
 				let c_fontname;
 				for (var i = 0; i < items.length; i++) {
 					let fontname = items[i].split('.');
@@ -246,16 +254,16 @@ function cleanProd() {
 }
 
 
-const bp = series( scriptProd, imgP, cssProd, html),
-		buildFonts = series(fonts, fontsStyle),
+const bP = series( scriptProd, iP, cssProd, html),
+		bF = series(fonts, fontsStyle),
 		build = series( parallel(scriptDev, imagesDev, cssDev, html)),
 		watchTask = parallel(build, watchFiles, browsersync);
 
 exports.watchTask  = watchTask;
 exports.default    = watchTask;
-exports.bp         = bp;
-exports.buildFonts = buildFonts;
-exports.imgP       = imgP;
+exports.bP         = bP;
+exports.bF         = bF;
+exports.iP         = iP;
 exports.sprite     = sprite;
 exports.otf        = otf;
 // npm install webp-converter@2.2.3 --save-dev
